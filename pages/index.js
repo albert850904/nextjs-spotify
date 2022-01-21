@@ -3,8 +3,17 @@ import CenterContents from '../components/CenterContents.js';
 import { getSession } from 'next-auth/react';
 import Sidebar from '../components/Sidebar.js';
 import Player from '../components/Player';
+import { useEffect } from 'react';
+import useSpotify from '../hooks/useSpotify.js';
 
 export default function Home() {
+  const spotifyApi = useSpotify();
+
+  useEffect(() => {
+    if (!spotifyApi) reutrn;
+    spotifyApi.getMyDevices().then((res) => console.log(res));
+  }, [spotifyApi]);
+
   return (
     <div className="bg-black h-screen overflow-hidden">
       <Head>

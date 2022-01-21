@@ -13,7 +13,10 @@ function Song({ order, track }) {
     setCurrentTrackId(track.track.id);
     setIsPlaying(true);
     try {
-      spotifyApi.play({ uris: [track.track.uri] });
+      spotifyApi.play({
+        uris: [track.track.uri],
+        device_id: '7a799b5604715a321c48ddbeefbf58a5e7dd6279',
+      });
     } catch (error) {
       console.log(error);
     }
