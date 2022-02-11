@@ -8,7 +8,6 @@ export async function middleware(req) {
   const token = await getToken({ req, secret: process.env.JWT_SECRET });
   const { pathname } = req.nextUrl;
 
-  console.log('_middleware: ', token, pathname);
   /**
    * 1. it's a request
    * 2. token exists
@@ -17,7 +16,7 @@ export async function middleware(req) {
     return NextResponse.next(); // continue on
   }
   // requesting a protected route
-  if (!token && pathname !== '/login') {
-    return NextResponse.redirect('/login');
-  }
+  // if (!token && pathname !== '/login') {
+  //   return NextResponse.redirect('/login');
+  // }
 }
