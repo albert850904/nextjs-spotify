@@ -1,13 +1,18 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useSpotify from '../hooks/useSpotify';
 import { millisToMinutesAndSeconds } from '../lib/time';
-import { currentTrackIdState, isPlayingState } from '../atoms/songAtom';
+import {
+  currentDeviceState,
+  currentTrackIdState,
+  isPlayingState,
+} from '../atoms/songAtom';
 
 function Song({ order, track }) {
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
     useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+  const deviceId = useRecoilValue(currentDeviceState);
 
   const playSongHandler = () => {
     setCurrentTrackId(track.track.id);
@@ -15,7 +20,7 @@ function Song({ order, track }) {
     try {
       spotifyApi.play({
         uris: [track.track.uri],
-        device_id: '7a799b5604715a321c48ddbeefbf58a5e7dd6279',
+        device_id: deviceId,
       });
     } catch (error) {
       console.log(error);

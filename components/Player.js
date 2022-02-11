@@ -44,9 +44,35 @@ function Player() {
     }
   };
 
+  const skipToNextHandler = () => {
+    // Skip User’s Playback To Next Track
+    spotifyApi.skipToNext().then(
+      () => {
+        console.log('Skip to next');
+      },
+      (err) => {
+        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+        console.log('Something went wrong!', err);
+      }
+    );
+  };
+
+  const skipToPrevHandler = () => {
+    // Skip User’s Playback To Previous Track
+    spotifyApi.skipToPrevious().then(
+      function () {
+        console.log('Skip to previous');
+      },
+      function (err) {
+        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+        console.log('Something went wrong!', err);
+      }
+    );
+  };
+
   const playPauseHandler = () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      if (data.body.is_playing) {
+      if (data.body?.is_playing) {
         spotifyApi.pause();
         setIsPlaying(false);
       } else {
@@ -58,9 +84,10 @@ function Player() {
 
   const debouncedAdjustVolume = useCallback(() => {
     debounce((volume) => {
-      spotifyApi.setVolume(volume).catch((error) => {});
+      console.log('voulmne');
+      spotifyApi.setVolume(volume);
     }, 500);
-  }, []);
+  }, [volume]);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && !currentTrackId) {
@@ -95,7 +122,7 @@ function Player() {
       {/* center */}
       <div className="flex items-center justify-evenly">
         <SwitchHorizontalIcon className="button" />
-        <RewindIcon className="button" />
+        <RewindIcon className="button" onClick={() => skipToPrevHandler()} />
 
         {isPlaying ? (
           <PauseIcon className="button w-10 h-10" onClick={playPauseHandler} />
@@ -103,7 +130,10 @@ function Player() {
           <PlayIcon className="button w-10 h-10" onClick={playPauseHandler} />
         )}
 
-        <FastForwardIcon className="button" />
+        <FastForwardIcon
+          className="button"
+          onClick={() => skipToNextHandler()}
+        />
         <ReplyIcon className="button" />
       </div>
 
@@ -111,8 +141,9 @@ function Player() {
       <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
         <VolumeDownIcon
           className="button"
-          onClick={() => (volume) =>
-            0 && setVolume((prevState) => prevState - 10)}
+          onClick={() =>
+            volume >= 0 && setVolume((prevState) => prevState - 10)
+          }
         />
         <input
           className="w-14 md:w-28"

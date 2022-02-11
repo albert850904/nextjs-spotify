@@ -5,13 +5,18 @@ import Sidebar from '../components/Sidebar.js';
 import Player from '../components/Player';
 import { useEffect } from 'react';
 import useSpotify from '../hooks/useSpotify.js';
+import { useRecoilState } from 'recoil';
+import { currentDeviceState } from '../atoms/songAtom.js';
 
 export default function Home() {
   const spotifyApi = useSpotify();
+  const [deviceId, setDeviceId] = useRecoilState(currentDeviceState);
 
   useEffect(() => {
-    if (!spotifyApi) reutrn;
-    spotifyApi.getMyDevices().then((res) => console.log(res));
+    if (!spotifyApi) return;
+    spotifyApi.getMyDevices().then((res) => {
+      setDeviceId(res?.body?.devices?.[0]);
+    });
   }, [spotifyApi]);
 
   return (

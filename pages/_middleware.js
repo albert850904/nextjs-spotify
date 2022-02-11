@@ -15,7 +15,9 @@ export async function middleware(req) {
   if (pathname.includes('/api/auth') || token) {
     return NextResponse.next(); // continue on
   }
+
   // requesting a protected route
+  // [TODO:] bug occur when deployed
   // if (!token && pathname !== '/login') {
   //   return NextResponse.redirect('/login');
   // }
